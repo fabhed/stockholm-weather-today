@@ -1,0 +1,72 @@
+To create a website that shows the current weather in Stockholm, we will use Python with Flask as the web framework and the OpenWeatherMap API to fetch the weather data. We will also use the requests library to make API calls.
+
+First, let's create the necessary files and their purposes:
+
+1. app.py: The main entry point of the Flask application.
+2. templates/index.html: The HTML template for the homepage.
+3. requirements.txt: The list of Python dependencies for the project.
+
+Now, let's create the content of each file:
+
+app.py
+```python
+from flask import Flask, render_template
+import requests
+
+app = Flask(__name__)
+
+def get_weather_data():
+    """Fetch the current weather data for Stockholm from OpenWeatherMap API."""
+    api_key = "your_openweathermap_api_key"
+    url = f"http://api.openweathermap.org/data/2.5/weather?q=Stockholm,SE&appid={api_key}&units=metric"
+    response = requests.get(url)
+    return response.json()
+
+@app.route("/")
+def index():
+    """Render the homepage with the current weather data."""
+    weather_data = get_weather_data()
+    current_temperature = weather_data["main"]["temp"]
+    return render_template("index.html", temperature=current_temperature)
+
+if __name__ == "__main__":
+    app.run(port=8000)
+```
+
+templates/index.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stockholm Weather</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 48px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    {{ temperature }}°C
+</body>
+</html>
+```
+
+requirements.txt
+```
+Flask==2.1.1
+requests==2.26.0
+```
+
+To run the application, follow these steps:
+
+1. Replace `your_openweathermap_api_key` in app.py with your actual OpenWeatherMap API key.
+2. Install the required dependencies using `pip install -r requirements.txt`.
+3. Run the Flask application using `python app.py`.
+4. Open your web browser and navigate to http://localhost:8000 to see the current temperature in Stockholm displayed in the center of the screen.
